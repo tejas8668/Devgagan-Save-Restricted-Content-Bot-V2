@@ -204,6 +204,16 @@ async def get_msg(userbot, sender, edit_id, msg_link, i, message):
                 )
                 return
             
+            try:
+                msg = await userbot.get_messages(chat, msg_id)
+            except Exception as e:
+                if "ChannelPrivateError" in str(e):
+                    await app.edit_message_text(sender, edit_id, "Private channel detected. Please login to save messages.")
+                    return
+                else:
+                    await app.edit_message_text(sender, edit_id, "Error occurred while fetching message.")
+                    return
+            
         elif '/s/' in msg_link: # fixed story typo
             edit = await app.edit_message_text(sender, edit_id, "Story Link Dictected...")
             if userbot is None:
